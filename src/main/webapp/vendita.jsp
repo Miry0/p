@@ -13,6 +13,19 @@
  	<title>Geek Factory - Vendita</title>
     <link rel="stylesheet" href="./css/account.css">
     <link rel="icon" href="./img/icon.png">
+    
+    <script>
+        function validateForm() {
+            var nome = document.forms["myForm"]["nome"].value;
+            var regex = /^[a-zA-Z\s]*$/; // Accetta solo lettere e spazi
+            if (!regex.test(nome)) {
+                alert("Il nome del prodotto può contenere solo lettere e spazi!");
+                return false;
+            }
+            return true;
+        }
+    </script>
+    
 </head>
 <body>
 	<div class="header">
@@ -27,7 +40,9 @@
 			<div class="user-details">
 				<div class="input-box">
 					<span class="details">Nome prodotto</span>
+					
 					<input type="text" name="nome" maxlength="50" placeholder="Inserire nome prodotto" autofocus required/>
+					
 				</div>
 				<div class="input-box">
 					<span class="details">Prezzo</span>
