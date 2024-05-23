@@ -46,7 +46,13 @@ public class ProductControl extends HttpServlet {
 				ProductBean prodotto = model.doRetrieveByKey(codice);
 				request.setAttribute("prodottoDettaglio", prodotto);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				
+				//la pratica di stampare direttamente lo stack trace può portare alla visualizzazione dei dettagli di un errore su lato client. 
+				 // Per risolvere questa vulerabilità, inooltriamo il cliente ad una pagina di errore generica
+				
+			    request.setAttribute("errorMessage", "Si è verificato un errore durante l'elaborazione della richiesta. Si prega di riprovare più tardi.");
+			    RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/error.jsp");
+			    dispatcher.forward(request, response);
 			}
 			finally {
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/productDetail.jsp");
