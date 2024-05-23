@@ -93,7 +93,7 @@ public class ProductModel {
 
 		int result = 0;
 
-		String deleteSQL = "UPDATE " + ProductModel.TABLE_NAME + "SET deleted = false WHERE codice = ?";
+		String deleteSQL = "UPDATE " + ProductModel.TABLE_NAME + " SET deleted = false WHERE codice = ?";
 
 		try {
 			connection = DriverManagerConnectionPool.getConnection();
@@ -121,12 +121,15 @@ public class ProductModel {
 
 		Collection<ProductBean> products = new LinkedList<ProductBean>();
 
-		String selectSQL = "SELECT * FROM " + ProductModel.TABLE_NAME + " WHERE deleted = 'false' AND nomeTipologia = '" + where + "'";
+		//trattiamo in modo sicuro la variabile in ingresso "where". Poichè, nella versione precendente vienne concatenato direttamente l'input dell'utente, senza effettuare controlli, potrebbe inserire codice malevolo o che potrebbe mettere a rischio la sicurezza/riservatezza dei dati. 
+		//risolviamo il problema sostituendo, all'interno della stringa "selectSQL" sottostante, la viariabile "where" con "?". In questo modo, l'inut verrà trattato come un dato e verrà effettuato l'escape dei caratteri speciali. 
+		String selectSQL = "SELECT * FROM " + ProductModel.TABLE_NAME + " WHERE deleted = 'false' AND nomeTipologia = ?";
 		String sql2 = "SELECT AVG(votazione) FROM Recensione WHERE codiceProdotto = ?";
 		
 		try {
 			connection = DriverManagerConnectionPool.getConnection();
 			preparedStatement = connection.prepareStatement(selectSQL);
+			preparedStatement.setString(1, where); 
 
 			ResultSet rs = preparedStatement.executeQuery();
 
